@@ -511,14 +511,14 @@ class WC_Admin_Setup_Wizard {
 			</select>
 			</div>
 
-			<input
-				type="checkbox"
-				id="woocommerce_sell_in_person"
-				name="sell_in_person"
-				value="yes"
-				<?php checked( $sell_in_person, true ); ?>
-			/>
 			<label class="location-prompt" for="woocommerce_sell_in_person">
+				<input
+					type="checkbox"
+					id="woocommerce_sell_in_person"
+					name="sell_in_person"
+					value="yes"
+					<?php checked( $sell_in_person, true ); ?>
+				/>&nbsp;
 				<?php esc_html_e( 'I will also be selling products or services in person.', 'woocommerce' ); ?>
 			</label>
 
