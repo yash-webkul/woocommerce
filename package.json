@@ -67,6 +67,7 @@
   },
   "dependencies": {
     "@woocommerce/block-library": "2.0.0-rc2",
+    "@woocommerce/admin-library": "./woocommerce-admin-library-0.8.0.tgz",
     "github-contributors-list": "https://github.com/woocommerce/github-contributors-list/tarball/master"
   },
   "husky": {
