@@ -15,8 +15,20 @@ class WC_Orders_Tracking {
 	 * Init tracking.
 	 */
 	public function init() {
+		add_action( 'post_updated', array( $this, 'track_order_actions' ), 10, 2 );
 		add_action( 'woocommerce_order_status_changed', array( $this, 'track_order_status_change' ), 10, 3 );
 		add_action( 'load-edit.php', array( $this, 'track_orders_view' ), 10 );
+	}
+
+	public function track_order_actions() {
+		if ( ! empty( $_POST['wc_order_action'] ) ) {
+
+			$action = wc_clean( wp_unslash( $_POST['wc_order_action'] ) );
+
+			WC_Tracks::record_event( 'orders_edit_order_action', array(
+				'action' => $action,
+			) );
+		}
 	}
 
 	/**
