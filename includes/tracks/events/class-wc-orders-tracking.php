@@ -20,6 +20,9 @@ class WC_Orders_Tracking {
 		add_action( 'load-edit.php', array( $this, 'track_orders_view' ), 10 );
 	}
 
+	/**
+	 * Send a Tracks event when an order action is taken.
+	 */
 	public function track_order_actions() {
 		if ( ! empty( $_POST['wc_order_action'] ) ) {
 
