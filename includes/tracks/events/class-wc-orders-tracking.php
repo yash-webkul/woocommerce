@@ -16,8 +16,35 @@ class WC_Orders_Tracking {
 	 */
 	public function init() {
 		add_action( 'post_updated', array( $this, 'track_order_actions' ), 10, 2 );
+		add_action( 'woocommerce_new_order_item', array( $this, 'track_edit_order_add_item' ), 10, 3 );
 		add_action( 'woocommerce_order_status_changed', array( $this, 'track_order_status_change' ), 10, 3 );
 		add_action( 'load-edit.php', array( $this, 'track_orders_view' ), 10 );
+	}
+
+	/**
+	 * Send a Tracks event when an order line item is added.
+	 */
+	function track_edit_order_add_item( $item_id, $item ) {
+
+		$type = null;
+
+		if ( $item instanceof WC_Order_Item_Product ) {
+			$type = 'product';
+		} else if ( $item instanceof WC_Order_Item_Fee ) {
+			$type = 'fee';
+		} else if ( $item instanceof WC_Order_Item_Shipping ) {
+			$type = 'shipping';
+		} else if ( $item instanceof WC_Order_Item_Tax ) {
+			$type = 'tax';
+		} else if ( $item instanceof WC_Order_Item_Coupon ) {
+			$type = 'coupon';
+		}
+
+		if ( $type ) {
+			WC_Tracks::record_event( 'orders_edit_order_add_item', array(
+				'type' => $type,
+			) );
+		}
 	}
 
 	/**
