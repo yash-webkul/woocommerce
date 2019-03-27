@@ -16,34 +16,58 @@ class WC_Orders_Tracking {
 	 */
 	public function init() {
 		add_action( 'post_updated', array( $this, 'track_order_actions' ), 10, 2 );
+		add_action( 'woocommerce_add_order_note', array( $this, 'track_order_note_add' ), 10, 2 );
 		add_action( 'woocommerce_new_order_item', array( $this, 'track_edit_order_add_item' ), 10, 3 );
 		add_action( 'woocommerce_order_status_changed', array( $this, 'track_order_status_change' ), 10, 3 );
 		add_action( 'load-edit.php', array( $this, 'track_orders_view' ), 10 );
 	}
 
 	/**
-	 * Send a Tracks event when an order line item is added.
+	 * Send a Tracks event when an order note is created.
+	 *
+	 * @param object $note object Note object.
+	 * @param bool   $is_customer_note If a note is to a customer.
 	 */
-	function track_edit_order_add_item( $item_id, $item ) {
+	public function track_order_note_add( $note, $is_customer_note ) {
+		$type = $is_customer_note ? 'customer' : 'private';
+
+		WC_Tracks::record_event(
+			'orders_edit_order_add_notes',
+			array(
+				'type' => $type,
+			)
+		);
+	}
+
+	/**
+	 * Send a Tracks event when an order line item is added.
+	 *
+	 * @param int    $item_id  Item id.
+	 * @param object $item  Item added to an order.
+	 */
+	public function track_edit_order_add_item( $item_id, $item ) {
 
 		$type = null;
 
 		if ( $item instanceof WC_Order_Item_Product ) {
 			$type = 'product';
-		} else if ( $item instanceof WC_Order_Item_Fee ) {
+		} elseif ( $item instanceof WC_Order_Item_Fee ) {
 			$type = 'fee';
-		} else if ( $item instanceof WC_Order_Item_Shipping ) {
+		} elseif ( $item instanceof WC_Order_Item_Shipping ) {
 			$type = 'shipping';
-		} else if ( $item instanceof WC_Order_Item_Tax ) {
+		} elseif ( $item instanceof WC_Order_Item_Tax ) {
 			$type = 'tax';
-		} else if ( $item instanceof WC_Order_Item_Coupon ) {
+		} elseif ( $item instanceof WC_Order_Item_Coupon ) {
 			$type = 'coupon';
 		}
 
 		if ( $type ) {
-			WC_Tracks::record_event( 'orders_edit_order_add_item', array(
-				'type' => $type,
-			) );
+			WC_Tracks::record_event(
+				'orders_edit_order_add_item',
+				array(
+					'type' => $type,
+				)
+			);
 		}
 	}
 
@@ -51,13 +75,16 @@ class WC_Orders_Tracking {
 	 * Send a Tracks event when an order action is taken.
 	 */
 	public function track_order_actions() {
-		if ( ! empty( $_POST['wc_order_action'] ) ) {
+		if ( ! empty( $_POST['wc_order_action'] ) ) { // @codingStandardsIgnoreLine
 
-			$action = wc_clean( wp_unslash( $_POST['wc_order_action'] ) );
+			$action = wc_clean( wp_unslash( $_POST['wc_order_action'] ) ); // @codingStandardsIgnoreLine
 
-			WC_Tracks::record_event( 'orders_edit_order_action', array(
-				'action' => $action,
-			) );
+			WC_Tracks::record_event(
+				'orders_edit_order_action',
+				array(
+					'action' => $action,
+				)
+			);
 		}
 	}
 

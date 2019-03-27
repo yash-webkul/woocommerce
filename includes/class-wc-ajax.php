@@ -1473,6 +1473,8 @@ class WC_AJAX {
 			$comment_id = $order->add_order_note( $note, $is_customer_note, true );
 			$note       = wc_get_order_note( $comment_id );
 
+			do_action( 'woocommerce_add_order_note', $note, $is_customer_note );
+
 			$note_classes   = array( 'note' );
 			$note_classes[] = $is_customer_note ? 'customer-note' : '';
 			$note_classes   = apply_filters( 'woocommerce_order_note_class', array_filter( $note_classes ), $note );
