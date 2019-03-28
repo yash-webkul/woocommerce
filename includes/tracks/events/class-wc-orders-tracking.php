@@ -16,27 +16,10 @@ class WC_Orders_Tracking {
 	 */
 	public function init() {
 		add_action( 'post_updated', array( $this, 'track_order_actions' ), 10, 2 );
-		add_action( 'woocommerce_add_order_note', array( $this, 'track_order_note_add' ), 10, 2 );
 		add_action( 'woocommerce_new_order_item', array( $this, 'track_edit_order_add_item' ), 10, 3 );
 		add_action( 'woocommerce_order_status_changed', array( $this, 'track_order_status_change' ), 10, 3 );
 		add_action( 'load-edit.php', array( $this, 'track_orders_view' ), 10 );
-	}
-
-	/**
-	 * Send a Tracks event when an order note is created.
-	 *
-	 * @param object $note object Note object.
-	 * @param bool   $is_customer_note If a note is to a customer.
-	 */
-	public function track_order_note_add( $note, $is_customer_note ) {
-		$type = $is_customer_note ? 'customer' : 'private';
-
-		WC_Tracks::record_event(
-			'orders_edit_order_add_notes',
-			array(
-				'type' => $type,
-			)
-		);
+		add_action( 'load-post.php', array( $this, 'track_order_note_add' ), 10 );
 	}
 
 	/**
@@ -85,6 +68,27 @@ class WC_Orders_Tracking {
 					'action' => $action,
 				)
 			);
+		}
+	}
+
+	/**
+	 * Send a Tracks event when an order note is created.
+	 */
+	public function track_order_note_add() {
+		if ( isset( $_GET['post'] ) ) {
+			$order = wc_get_order( intval( $_GET['post'] ) );
+			if ( ! empty( $order ) ) {
+				wc_enqueue_js(
+					"
+					$( 'button.add_note' ).click( function( e ) {
+						var type = $( '#order_note_type' ).val();
+						window.wcTracks.recordEvent( 'orders_edit_order_add_notes', {
+							type: type ? type : 'private'
+						} );
+					} );
+				"
+				);
+			}
 		}
 	}
 
