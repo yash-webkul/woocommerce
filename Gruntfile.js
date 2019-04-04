@@ -460,10 +460,6 @@ module.exports = function( grunt ) {
 							"'/assets/js/wc-admin/'"
 						)
 						.replace(
-							/WC_ADMIN_API_NAMESPACE/g,
-							"'/wc/v3'"
-						)
-						.replace(
 							/WC_ADMIN_APP/g,
 							"'woocommerce-admin'"
 						).replace(

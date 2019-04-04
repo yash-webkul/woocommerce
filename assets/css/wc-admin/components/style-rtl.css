@@ -350,16 +350,15 @@ The CSSTransition element creates a containing div without a class
   margin: 0 auto 0 0;
   min-height: 50px;
   padding: 8px 16px 0 16px; }
-  @media (max-width: 782px) {
+  @media (max-width: 960px) {
     .woocommerce-chart__interval-select {
-      padding: 0 16px;
-      margin-top: -8px; } }
-  @media (max-width: 782px) {
-    .woocommerce-chart__interval-select {
-      border-left: 0;
-      min-height: 0;
+      width: 100%;
       order: 1;
-      width: 100%; } }
+      margin-top: -8px;
+      margin-right: 0;
+      padding-right: 8px;
+      border-left: 0;
+      min-height: 0; } }
   #wpbody .woocommerce-chart__interval-select .components-select-control__input {
     font-size: 13px;
     font-size: 0.8125rem;
@@ -383,6 +382,14 @@ The CSSTransition element creates a containing div without a class
       color: #555d66; }
     .woocommerce-chart__type-button.components-icon-button:hover {
       box-shadow: none !important; }
+
+@media (max-width: 960px) {
+  .woocommerce-summary + .woocommerce-chart .woocommerce-chart__title {
+    display: none; }
+  .woocommerce-summary + .woocommerce-chart .woocommerce-chart__interval-select {
+    width: auto;
+    order: 0;
+    margin-top: 0; } }
 
 /** @format */
 /**
@@ -561,10 +568,12 @@ The CSSTransition element creates a containing div without a class
     margin: 0 auto;
     max-width: 50%;
     padding-bottom: 48px;
+    pointer-events: none;
     position: absolute;
     left: 0;
     top: 0;
-    text-align: center; }
+    text-align: center;
+    z-index: 1; }
     @media (max-width: 782px) {
       .d3-chart__container .d3-chart__empty-message {
         font-size: 13px;
@@ -633,7 +642,7 @@ The CSSTransition element creates a containing div without a class
     shape-rendering: crispEdges; }
   .d3-chart__container .grid .tick:first-child line {
     stroke: #555d66; }
-  .d3-chart__container .grid .tick:last-child line {
+  .d3-chart__container .grid.with-positive-ticks .tick:last-child line {
     opacity: 0; }
   .d3-chart__container .tick {
     padding-top: 10px;
@@ -1214,6 +1223,9 @@ button.woocommerce-filters-date__tab {
   overflow: hidden; }
   .woocommerce-filters-filter__search .woocommerce-search__inline-container:not(.is-active) {
     border: none; }
+
+.woocommerce-filters-advanced__list-item .components-base-control + .components-base-control {
+  margin-bottom: 0; }
 
 /** @format */
 .woocommerce-flag span {
